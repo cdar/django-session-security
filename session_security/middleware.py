@@ -55,6 +55,9 @@ class SessionSecurityMiddleware(object):
         last_activity = get_last_activity(request.session)
         server_idle_for = (now - last_activity).seconds
 
+        if server_idle_for >= EXPIRE_AFTER:
+            return
+
         if (request.path == reverse('session_security_ping') and
                 'idleFor' in request.GET):
             # Gracefully ignore non-integer values
